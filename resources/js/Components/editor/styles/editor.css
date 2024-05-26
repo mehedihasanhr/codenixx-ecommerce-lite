@@ -1,0 +1,54 @@
+.DraftEditor-root {
+  /* background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius); */
+  height: 100%;
+}
+
+.DraftEditor-editorContainer {
+  min-height: 100%;
+}
+
+.public-DraftEditor-content {
+  min-height: 290px;
+  padding: 1rem 0;
+}
+
+.public-DraftEditorPlaceholder-root {
+  position: absolute;
+  padding: 1rem 0;
+  pointer-events: none;
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+}
+
+.public-DraftStyleDefault-ul {
+  margin: 1rem;
+}
+
+.public-DraftStyleDefault-ol {
+  margin: 1rem;
+}
+
+.RichEditor-style__text-align-left > .public-DraftStyleDefault-block {
+  text-align: left;
+}
+
+.RichEditor-style__text-align-right > .public-DraftStyleDefault-block {
+  text-align: right;
+}
+
+.RichEditor-style__text-align-center > .public-DraftStyleDefault-block {
+  text-align: center;
+}
+.RichEditor-style__text-align-justify > .public-DraftStyleDefault-block {
+  text-align: justify;
+}
+
+.RichEditor-style__blockquote {
+  border-left: 2px solid hsl(var(--border));
+  margin: 0;
+  padding: 0 1em;
+  font-style: oblique;
+  color: hsl(var(--muted-foreground));
+}
