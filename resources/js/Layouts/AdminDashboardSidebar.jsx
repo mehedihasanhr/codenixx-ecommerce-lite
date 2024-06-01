@@ -15,7 +15,7 @@ import {
 
 export default function AdminDashboardSidebar(props) {
     return (
-        <div className="flex flex-col w-64 border-r h-screen">
+        <div className="hidden md:flex flex-col w-64 border-r h-screen">
             <div className="border-b border-border h-14 px-2.5 py-1">
                 <Logo />
             </div>

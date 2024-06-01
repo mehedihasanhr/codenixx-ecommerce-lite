@@ -5,7 +5,7 @@ export const forceSelection = (editorState) => {
         console.error("editorState is undefined in forceSelection");
         return editorState;
     }
-    return EditorState.forceSelection(editorState, editorState.getSelection());
+    return EditorState.forceSelection(editorState, editorState?.getSelection());
 };
 
 // focus block key
@@ -14,7 +14,7 @@ export const getFocusedBlockKey = (editorState) => {
         console.error("editorState is undefined in getFocusedBlockKey");
         return null;
     }
-    const selection = editorState.getSelection();
+    const selection = editorState?.getSelection();
     const focusKey = selection.getFocusKey();
     return focusKey;
 };
@@ -25,13 +25,13 @@ export const getFocusedBlock = (editorState) => {
         console.error("editorState is undefined in getFocusedBlock");
         return null;
     }
-    const contentState = editorState.getCurrentContent();
+    const contentState = editorState?.getCurrentContent();
     const focusKey = getFocusedBlockKey(editorState);
     if (!focusKey) {
         console.error("focusKey is undefined in getFocusedBlock");
         return null;
     }
-    const focusedBlock = contentState.getBlockForKey(focusKey);
+    const focusedBlock = contentState?.getBlockForKey(focusKey);
     return focusedBlock;
 };
 
@@ -41,7 +41,7 @@ export const isStyleActive = (editorState, style) => {
         console.error("editorState is undefined in isStyleActive");
         return false;
     }
-    const currentStyle = editorState.getCurrentInlineStyle();
+    const currentStyle = editorState?.getCurrentInlineStyle();
     return currentStyle.has(style);
 };
 

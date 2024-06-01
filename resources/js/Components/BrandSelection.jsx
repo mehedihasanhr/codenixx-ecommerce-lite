@@ -13,7 +13,7 @@ import { ScrollArea } from "./ui/scroll-area";
 
 export function BrandSelection({ brands, value, onChange }) {
     const [open, setOpen] = React.useState(false);
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = React.useState(() => value ? brands.find(b => b.id === value)?.name : "");
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -34,6 +34,7 @@ export function BrandSelection({ brands, value, onChange }) {
                                 {brands?.map((brand) => (
                                     <CommandItem
                                         value={brand.id}
+                                        key={brand.id}
                                         onSelect={(currentValue) => {
                                             setSelected(currentValue);
                                             onChange(brand.id);

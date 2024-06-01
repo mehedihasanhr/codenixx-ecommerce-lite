@@ -1,5 +1,6 @@
+import { Inertia } from '@inertiajs/inertia';
 import clsx from "clsx";
-import React from "react";
+import React, { useTransition } from "react";
 import {
     Pagination,
     PaginationContent,
@@ -24,8 +25,8 @@ export default function TablePagination({
     pageSize,
     onPageChange,
     onPageSizeChange,
-    baseURL,
 }) {
+    const [_, startTransition] = useTransition();
     const [pageButtons, setPageButtons] = React.useState([1, 2, 3]);
     const maxButtons = 3; // Maximum number of page buttons to display
     const POST_ELLIPSE = totalPages > maxButtons && pageIndex < totalPages - 1;
@@ -64,12 +65,41 @@ export default function TablePagination({
         setPageButtons(buttons);
     }, [pageIndex, pageSize, totalPages, totalDataLength]);
 
-    const handlePageChange = (index) => {
+    const handlePageChange = (page) => {
         onPageChange({
-            pageIndex: index,
+            pageIndex: page-1,
             pageSize,
         });
+
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('page', page);
+
+        const paramsObject = Object.fromEntries(searchParams.entries());
+
+        // Update the query string using Inertia
+        const newUrl = route('dashboard.products', paramsObject);
+
+        // Perform Inertia visit
+        Inertia.visit(newUrl);
     };
+
+    const handlePageSizeChange = (value) => {
+        onPageSizeChange({ pageIndex, pageSize: Number(value) });
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('ppi', value);
+
+        const paramsObject = Object.fromEntries(searchParams.entries());
+
+        // Update the query string using Inertia
+        const newUrl = route('dashboard.products', paramsObject);
+
+        // Perform Inertia visit
+        Inertia.visit(newUrl);
+    }
+
+
 
     return (
         <Pagination className="justify-between py-3">
@@ -77,14 +107,15 @@ export default function TablePagination({
                 <span className="whitespace-nowrap">{"Rows per page "}</span>
                 <Select
                     value={pageSize.toString()}
-                    onValueChange={(value) =>
-                        onPageSizeChange({ pageIndex, pageSize: Number(value) })
-                    }
+                    onValueChange={handlePageSizeChange}
                 >
                     <SelectTrigger className="px-2.5 h-8 rounded-sm">
                         <SelectValue className="rounded-sm" />
                     </SelectTrigger>
                     <SelectContent>
+                        {[10, 20, 40, 100, 500].includes(pageSize) ? null :
+                            <SelectItem value={`${pageSize}`}> {pageSize} </SelectItem>
+                         }
                         <SelectItem value="10"> 10 </SelectItem>
                         <SelectItem value="20"> 20 </SelectItem>
                         <SelectItem value="40"> 40 </SelectItem>
@@ -97,21 +128,26 @@ export default function TablePagination({
             <PaginationContent className="text-mute-foreground">
                 <PaginationItem>
                     <PaginationPrevious
-                        href={
-                            pageIndex > 0
-                                ? `${baseURL}?page=${pageIndex}&count=${pageSize}`
-                                : "#"
-                        }
-                        onClick={() =>
-                            pageIndex > 0 && handlePageChange(pageIndex - 1)
-                        }
-                        className={clsx(
-                            "",
-                            pageIndex === 0 &&
-                                "hover:cursor-not-allowed opacity-50"
+                        href="#"
+                         disabled={pageIndex === 0}
+                        className={clsx( "",
+                            pageIndex === 0 && "hover:cursor-not-allowed opacity-50"
                         )}
+                        onClick={() => (pageIndex < totalPages - 1 && pageIndex !== 0) ? handlePageChange(pageIndex) : null}
                     />
                 </PaginationItem>
+
+                 {pageIndex > 2  ?
+                    <PaginationItem>
+                        <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(1)}
+                            className="w-8"
+                        >
+                            1
+                        </PaginationLink>
+                    </PaginationItem>
+                : null}
 
                 {PRE_ELLIPSE && (
                     <PaginationItem>
@@ -121,9 +157,10 @@ export default function TablePagination({
                 {pageButtons.map((item) => (
                     <PaginationItem key={item}>
                         <PaginationLink
-                            href={`${baseURL}?page=${item}&count=${pageSize}`}
+                            href="#"
                             isActive={pageIndex + 1 === item}
-                            onClick={() => handlePageChange(item - 1)}
+                            className="w-8"
+                            onClick={() => handlePageChange(item)}
                         >
                             {item}
                         </PaginationLink>
@@ -135,24 +172,26 @@ export default function TablePagination({
                         <PaginationEllipsis className="opacity-50" />
                     </PaginationItem>
                 )}
+
+                {pageIndex + 2 < totalPages  ?
+                    <PaginationItem>
+                        <PaginationLink
+                            href="#"
+                            onClick={() => handlePageChange(totalPages)}
+                            className="w-8"
+                        >
+                            {totalPages}
+                        </PaginationLink>
+                    </PaginationItem>
+                : null}
+
                 <PaginationItem>
                     <PaginationNext
-                        href={
-                            pageIndex < totalPages - 1
-                                ? `${baseURL}?page=${
-                                      pageIndex + 2
-                                  }&count=${pageSize}`
-                                : "#"
-                        }
-                        onClick={() =>
-                            pageIndex < totalPages - 1 &&
-                            handlePageChange(pageIndex + 1)
-                        }
-                        className={clsx(
-                            "",
-                            pageIndex === totalPages - 1 &&
-                                "hover:cursor-not-allowed opacity-50"
+                        href="#"
+                        className={clsx( "",
+                            pageIndex === totalPages - 1 &&  "hover:cursor-not-allowed opacity-50"
                         )}
+                        onClick={() => pageIndex < totalPages - 1 ? handlePageChange(pageIndex + 2) : null}
                     />
                 </PaginationItem>
             </PaginationContent>

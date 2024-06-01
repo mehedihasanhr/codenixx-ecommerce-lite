@@ -45,4 +45,13 @@ class User extends Authenticatable
             'role'=>'string',
         ];
     }
+
+    /**
+     * Get the reviews for the user.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
 }

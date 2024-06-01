@@ -36,6 +36,7 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }) => (
                 variant: isActive ? "outline" : "ghost",
                 size,
             }),
+            "h-8",
             className
         )}
         {...props}
@@ -46,12 +47,12 @@ PaginationLink.displayName = "PaginationLink";
 const PaginationPrevious = ({ className, ...props }) => (
     <PaginationLink
         aria-label="Go to previous page"
-        size="default"
+        size="sm"
         className={cn("gap-1 pl-2.5", className)}
         {...props}
     >
-        <ChevronLeft className="h-4 w-4" />
-        <span>Previous</span>
+        <ChevronLeft className="h-3.5 w-3.5" />
+        <span>Prev</span>
     </PaginationLink>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
@@ -59,12 +60,12 @@ PaginationPrevious.displayName = "PaginationPrevious";
 const PaginationNext = ({ className, ...props }) => (
     <PaginationLink
         aria-label="Go to next page"
-        size="default"
+        size="sm"
         className={cn("gap-1 pr-2.5", className)}
         {...props}
     >
         <span>Next</span>
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="h-3.5 w-3.5" />
     </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
@@ -72,10 +73,10 @@ PaginationNext.displayName = "PaginationNext";
 const PaginationEllipsis = ({ className, ...props }) => (
     <span
         aria-hidden
-        className={cn("flex h-9 w-9 items-center justify-center", className)}
+        className={cn("flex h-8 w-8 items-center justify-center", className)}
         {...props}
     >
-        <MoreHorizontal className="h-4 w-4" />
+        <MoreHorizontal className="h-3.5 w-3.5" />
         <span className="sr-only">More pages</span>
     </span>
 );
@@ -88,5 +89,6 @@ export {
     PaginationItem,
     PaginationLink,
     PaginationNext,
-    PaginationPrevious,
+    PaginationPrevious
 };
+

@@ -28,34 +28,36 @@ import { units } from "@/data/product.data";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Currency } from "@/utils/currency";
 import { Link, useForm } from "@inertiajs/react";
-import { Cross1Icon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, Cross2Icon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { toast } from "sonner";
 
-export default function ProductCreate({ categories, brands }) {
-    const { data, setData, post, errors, setDefaults } = useForm({
-        name: "",
-        description: undefined,
-        price: "",
-        compare_price: "",
-        cost_per_item: "",
-        stock: 0,
-        stock_unit: "pcs",
-        category: "",
-        brand: "",
-        out_of_stock_selling: false,
-        sku: "",
-        barcode: "",
-        is_physical_product: false,
-        product_weight: 0,
-        product_weight_unit: "kg",
-        product_height: 0,
-        product_width: 0,
-        product_length: 0,
-        status: 'drafted',
-        colors: [],
-        sizes: [],
-        files: [],
+export default function ProductEdit({ product, categories, brands }) {
+
+    const { data, setData, patch, errors, processing } = useForm({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        compare_price: product.compare_price,
+        cost_per_item: product.cost_per_item,
+        stock: product.stock,
+        stock_unit: product.stock_unit,
+        category: product.category_id,
+        brand: product.brand_id,
+        out_of_stock_selling: product.out_of_stock_selling,
+        sku: product.sku,
+        barcode: product.barcode,
+        is_physical_product: product.is_physical_product,
+        product_weight: product.weight,
+        product_weight_unit: product.weight_unit,
+        product_height: product.height,
+        product_width: product.width,
+        product_length: product['length'],
+        status: product.status,
+        colors: product.colors,
+        sizes: product.sizes,
+        galleries: product.galleries,
+        files: []
     });
 
     const handleChange = (e) => {
@@ -68,10 +70,9 @@ export default function ProductCreate({ categories, brands }) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        post(route('product.create'), {
+        patch(route('product.update', {product_id: product.id}), {
             onSuccess: () => {
-                toast.success("Product Created Successfully")
-                // setDefaults()
+                toast.success("Product Updated Successfully")
             }
         })
     };
@@ -94,7 +95,7 @@ export default function ProductCreate({ categories, brands }) {
                     <h2>Product</h2>
                 </div>
 
-                <form onSubmit={onSubmit}>
+                <form onSubmit={onSubmit} method="patch" encType="multipart/form-data">
                     <div className="grid grid-cols-12 gap-5">
                         {/* Left section */}
                         <div className="col-span-12 lg:col-span-8 flex flex-col gap-5">
@@ -123,7 +124,7 @@ export default function ProductCreate({ categories, brands }) {
                                     <FormGroup>
                                         <Label>Description</Label>
                                         <TextEditor
-                                            defaultValue={data?.description ?? undefined}
+                                            defaultValue={data.description}
                                             onChange={(value) => setData((prev) => ({...prev, description: value}))}
                                         />
                                         <InputError message={errors.description} />
@@ -140,7 +141,31 @@ export default function ProductCreate({ categories, brands }) {
                                 </CardHeader>
 
                                 <CardContent className="grid grid-cols-12 gap-5">
-                                    {/* Upload Media */}
+                                     {data.galleries.map((file, index) => (
+                                        <div
+                                            key={index}
+                                            className="col-span-4 relative w-full rounded-lg group aspect-square border"
+                                        >
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="icon-sm"
+                                                className="rounded-full absolute right-1 top-1 shadow-md items-center justify-center hidden group-hover:flex"
+                                                asChild
+                                            >
+                                                <Link href={route('gallery.remove', {gallery_id: file.id})} method="delete">
+                                                    <Cross2Icon />
+                                                </Link>
+                                            </Button>
+                                            <img
+                                                src={file.image_url}
+                                                alt=""
+                                                width={150}
+                                                height={150}
+                                                className="w-full h-full object-contain rounded-lg"
+                                            />
+                                        </div>
+                                    ))}
                                     <ImageUpload
                                         files={data.files}
                                         setFiles={(files) => setData(prev => ({...prev, files}))}
@@ -443,7 +468,7 @@ export default function ProductCreate({ categories, brands }) {
                                                 disabled={!data.is_physical_product}
                                             />
                                             <Select
-                                                defaultValue="kg"
+                                                defaultValue={data.product_weight_unit}
                                                 onValueChange={currentValue => {
                                                     setData(prev => ({
                                                         ...prev,
@@ -566,16 +591,17 @@ export default function ProductCreate({ categories, brands }) {
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="drafted"> Draft </SelectItem>
-                                                <SelectItem value="published"> Publish </SelectItem>
+                                                <SelectItem value="drafted" > Draft </SelectItem>
+                                                <SelectItem value="published" > Publish </SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <Button
                                             size="sm"
                                             type="submit"
+                                            disabled={processing}
                                             className="h-10 col-span-12 xl:col-span-4"
                                         >
-                                            Save
+                                            {processing ? 'Processing...' : 'Update'}
                                         </Button>
                                     </div>
                                 </FormGroup>

@@ -9,7 +9,7 @@ class Gallery extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image_url'];
+    protected $fillable = ['image_url', 'imageable_id', 'imageable_type'];
 
     /**
      * Get the owning imageable model.

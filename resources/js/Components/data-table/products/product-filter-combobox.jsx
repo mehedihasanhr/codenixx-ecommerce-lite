@@ -10,18 +10,37 @@ import {
     CommandGroup,
     CommandInput,
     CommandItem,
-    CommandList,
+    CommandList
 } from "@/Components/ui/command";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/Components/ui/popover";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Inertia } from "@inertiajs/inertia";
 
-export function ProductFilterCombobox({ data, title }) {
+export function ProductFilterCombobox({ data, title, defaultCategory }) {
     const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState(defaultCategory);
+
+
+    // handle brand change
+    const handleCategorySelect = (d) => {
+         setValue(d.id === value  ? "": d.id);
+
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('category', d.id);
+
+        const paramsObject = Object.fromEntries(searchParams.entries());
+
+        // Update the query string using Inertia
+        const newUrl = route('dashboard.products', paramsObject);
+
+        // Perform Inertia visit
+        Inertia.visit(newUrl);
+    }
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -36,7 +55,7 @@ export function ProductFilterCombobox({ data, title }) {
                     className="h-9 w-[200px] justify-between pr-2.5"
                 >
                     {value !== "" ? (
-                        data.find((d) => d.value === value)?.label
+                        data.find((d) => d.id === Number(value))?.name
                     ) : (
                         <span className="bold-normal text-muted-foreground">
                             Filter by {title}...
@@ -49,35 +68,32 @@ export function ProductFilterCombobox({ data, title }) {
                 <Command>
                     <CommandInput placeholder={`Search ${title}...`} />
 
-                    <CommandList>
-                        <CommandEmpty>No {title} found.</CommandEmpty>
-                        <CommandGroup>
-                            {data.map((d) => (
-                                <CommandItem
-                                    key={d.value}
-                                    value={d.value}
-                                    onSelect={(currentValue) => {
-                                        setValue(
-                                            currentValue === value
-                                                ? ""
-                                                : currentValue
-                                        );
-                                        setOpen(false);
-                                    }}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            value === d.value
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                    {d.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
+                    <ScrollArea className="h-[300px]">
+                        <CommandList className="max-h-fit">
+                            <CommandEmpty>No {title} found.</CommandEmpty>
+
+                            <CommandGroup>
+                                {data.map((category) => (
+                                    <React.Fragment key={category.id}>
+                                        <CommandItem
+                                            value={category.id}
+                                            onSelect={() => {
+                                                handleCategorySelect(category)
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            <Check
+                                                className={cn( "mr-2 h-4 w-4",
+                                                    value === category.id ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                            {category.name}
+                                        </CommandItem>
+                                    </React.Fragment>
+                                ))}
+                            </CommandGroup>
+                        </CommandList>
+                    </ScrollArea>
                 </Command>
             </PopoverContent>
         </Popover>

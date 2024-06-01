@@ -30,7 +30,7 @@ export function Toolbar(props) {
     };
 
     return (
-        <div className="flex items-center gap-0.5 p-1 border rounded-lg">
+        <div className="flex items-center flex-wrap gap-0.5 p-1 border rounded-lg">
             {/* Headings */}
             <HeadingButtons {...props} />
 

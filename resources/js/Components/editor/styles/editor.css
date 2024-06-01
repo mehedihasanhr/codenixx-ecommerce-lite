@@ -22,6 +22,10 @@
   font-size: 14px;
 }
 
+a {
+    color: hsl(var(--primary))
+}
+
 .public-DraftStyleDefault-ul {
   margin: 1rem;
 }

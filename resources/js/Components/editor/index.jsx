@@ -1,23 +1,46 @@
 "use client";
 
 import { ScrollArea } from "@/Components/ui/scroll-area";
-import { DefaultDraftBlockRenderMap, Editor, EditorState } from "draft-js";
+import { ContentState, DefaultDraftBlockRenderMap, Editor, EditorState, convertFromHTML, convertToRaw } from "draft-js";
 import "draft-js/dist/Draft.css";
 
-import { useState } from "react";
+import draftToHtml from "draftjs-to-html";
+import { useEffect, useState } from "react";
 import { EditorImageRenderComponent } from "./component/image-component";
 import { blockRenderMap, styleMap } from "./config";
 import "./styles/editor.css";
 import { Toolbar } from "./toolbar";
 
 export default function TextEditor({ defaultValue, onChange, ...props }) {
-    const [editorState, setEditorState] = useState(
-        () => defaultValue ?? EditorState.createEmpty()
-    );
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    useEffect(() => {
+       if(defaultValue){
+            const blocksFormHtml = convertFromHTML(defaultValue);
+            const state = ContentState.createFromBlockArray(
+                blocksFormHtml.contentBlocks,
+                blocksFormHtml.entityMap
+            )
+            setEditorState(EditorState.createWithContent(state));
+       }
+    },[])
 
     const handleEditorChange = (editorState) => {
         setEditorState(editorState);
-        onChange(JSON.stringify(editorState));
+        const raw = convertToRaw(editorState.getCurrentContent());
+        console.log({raw})
+
+        const hashtagConfig = {trigger: "#", separator: ' '}
+
+        const markup = draftToHtml(
+            raw,
+            hashtagConfig,
+            false
+        );
+
+        console.log({markup})
+
+        onChange(markup)
     };
 
     // blockStyleFn

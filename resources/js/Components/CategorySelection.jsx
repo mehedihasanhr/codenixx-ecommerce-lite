@@ -23,11 +23,13 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
 export function CategorySelection({ categories, value, onChange }) {
+    const [open, setOpen] = React.useState(false);
     const [data, setData] = React.useState({});
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = React.useState(() => value ? categories.find(c => c.id === value)?.name : '');
     const [previousActive, setPreviousActive] = React.useState("");
     const [activeMenu, setActiveMenu] = React.useState("null");
     const [height, setHeight] = React.useState();
+
 
     React.useEffect(() => {
         // group by parents
@@ -36,7 +38,7 @@ export function CategorySelection({ categories, value, onChange }) {
     }, [categories]);
 
     return (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger className="w-full h-10 px-3 py-2 border rounded-md text-sm text-left">
                 <span className="flex items-center gap-2">
                     <span className="flex-1">
@@ -48,7 +50,7 @@ export function CategorySelection({ categories, value, onChange }) {
             <PopoverContent className="p-0 w-[var(--radix-popover-trigger-width)]">
                 <Command>
                     <CommandList
-                        className="w-64 max-h-auto transition-[height] duration-300 ease-linear overflow-hidden relative"
+                        className="w-[var(--radix-popover-trigger-width)] max-h-auto transition-[height] duration-300 ease-linear overflow-hidden relative"
                         style={{ height }}
                     >
                         <CommandGroup>
@@ -65,6 +67,7 @@ export function CategorySelection({ categories, value, onChange }) {
                                         setHeight={setHeight}
                                         onChange={onChange}
                                         data={data}
+                                        setOpen={setOpen}
                                         previousActive={previousActive}
                                         setPreviousActive={setPreviousActive}
                                     />
@@ -91,6 +94,7 @@ function CategoryGroup({
     data,
     previousActive,
     setPreviousActive,
+    setOpen
 }) {
     const ref = React.useRef(null);
 
@@ -119,7 +123,7 @@ function CategoryGroup({
                         : "absolute translate-[110%] transition-all ease-linear",
             }}
         >
-            <div ref={ref} className="bg-popover w-[248px]">
+            <div ref={ref} className="bg-popover w-[calc(var(--radix-popover-trigger-width)-10px)]">
                 {activeMenu !== "null" ? (
                     <div>
                         <Button
@@ -145,6 +149,7 @@ function CategoryGroup({
                         onSelect={(currentValue) => {
                             setSelected(currentValue);
                             onChange(category.id);
+                            setOpen(false)
                         }}
                         className="flex items-center"
                     >

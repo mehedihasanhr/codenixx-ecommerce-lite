@@ -16,6 +16,16 @@ class Brand extends Model
      */
     public function images()
     {
-        return $this->morphMany(ImageGallery::class, 'imageable');
+        return $this->morphMany(Gallery::class, 'imageable');
+    }
+
+
+
+     /**
+     * Get the products for the category.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

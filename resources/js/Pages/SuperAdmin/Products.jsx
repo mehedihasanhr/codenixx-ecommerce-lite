@@ -1,25 +1,39 @@
 import ProductsTable from "@/Components/data-table/products/table";
 import { Button } from "@/Components/ui/button";
-import { productData } from "@/data/product.data";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Head, Link } from "@inertiajs/react";
 import { IconPlus } from "@tabler/icons-react";
 
-export default function Products(props) {
+export default function Products({
+     products,
+     sortField,
+     sortOrder,
+     totalProducts,
+     published,
+     drafted,
+     trashed,
+     filter,
+     categories,
+     brands,
+     brand,
+     category
+}) {
+
+    console.log({products: products?.data})
+
     return (
         <>
             <Head title="Products" />
 
             <AdminLayout>
-                <div className="p-8">
-                    <div className="flex items-center justify-between">
+                <div className="p-8 overflow-hidden max-w-full">
+                    <div className="flex items-center justify-between mb-8">
                         <div>
                             <h2>Products Management</h2>
-                            <p>Products</p>
                         </div>
                         <Button size="sm" asChild>
                             <Link
-                                href={route("dashboard.product.create")}
+                                href={route("product.create")}
                                 className="flex items-center space-x-1"
                             >
                                 <IconPlus size={15} />
@@ -28,7 +42,50 @@ export default function Products(props) {
                         </Button>
                     </div>
 
-                    <ProductsTable data={productData(10)} />
+                    <div className="p-8 relative mt-8 max-w-full overflow-hidden rounded-lg border border-border/50 bg-background">
+                        <div className="flex mb-5 text-sm">
+                            <Link
+                                href={route('dashboard.products')}
+                                data-active={filter === ''}
+                                className="pr-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                            >
+                                Products ( <span className="text-foreground">{totalProducts}</span>)
+                            </Link>
+                            <Link
+                                href={route('dashboard.products', {filter: 'published'})}
+                                data-active={filter === 'published'}
+                                className="px-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                            >
+                                Published (
+                                <span className="text-foreground">{published}</span>)
+                            </Link>
+                            <Link
+                                href={route('dashboard.products', {filter: 'drafted'})}
+                                data-active={filter === 'drafted'}
+                                className="px-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                            >
+                                Drafts (
+                                <span className="text-foreground">{drafted}</span>)
+                            </Link>
+                            <Link
+                                href={route('dashboard.products', {filter: 'trashed'})}
+                                data-active={filter === 'trashed'}
+                                className="px-2.5 data-[active=true]:text-primary font-medium hover:underline"
+                            >
+                                Trash (
+                                <span className="text-foreground">{trashed}</span>)
+                            </Link>
+                        </div>
+                        <ProductsTable
+                            data={products}
+                            sortField={sortField}
+                            sortOrder={sortOrder}
+                            categories={categories}
+                            brands={brands}
+                            defaultBrand={brand}
+                            defaultCategory={category}
+                        />
+                    </div>
                 </div>
             </AdminLayout>
         </>

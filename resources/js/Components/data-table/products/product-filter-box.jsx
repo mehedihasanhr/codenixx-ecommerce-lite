@@ -4,6 +4,7 @@ import { Input } from "@/Components/ui/input";
 import { IconSearch } from "@tabler/icons-react";
 
 export function ProductSearchBox() {
+
     return (
         <div className="relative max-w-[300px]">
             <IconSearch
