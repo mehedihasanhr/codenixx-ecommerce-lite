@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Order;
-use App\Models\OrderStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +17,6 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'order_number' => $this->faker->unique()->numerify('ORDER-####'),
             'status_id' => 1,
             'total' => $this->faker->randomFloat(2, 20, 500),
             'shipping_address' => $this->faker->address,

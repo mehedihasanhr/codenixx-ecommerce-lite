@@ -22,6 +22,7 @@ import {
 } from "@/Components/ui/select";
 import { cn } from "@/lib/utils";
 import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import _ from "lodash";
@@ -29,28 +30,29 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export function OrderFilter(props) {
-    const [date, setDate] = useState(() => props?.order_date ? new Date(props?.order_date): null);
+    const [date, setDate] = useState(() =>
+        props?.order_date ? new Date(props?.order_date) : null
+    );
     const [isCustomerPopoverOpen, setIsCustomerPopoverOpen] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(props?.customer);
-    const [status,setStatus] = useState(props?.status);
-
+    const [status, setStatus] = useState(props?.status);
 
     // handle date filter
     const handleDateFilter = (date) => {
         setDate(date);
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("order_date", dayjs(date).format('MM-DD-YYYY'));
+        searchParams.set("order_date", dayjs(date).format("MM-DD-YYYY"));
         const paramsObject = Object.fromEntries(searchParams.entries());
         // Update the query string using Inertia
         const newUrl = route("adminpanel.orders", paramsObject);
         // Perform Inertia visit
-        Inertia.visit(newUrl);
-    }
+        router.get(newUrl);
+    };
 
     // handle customer filter
     const handleCustomerFilter = (customer) => {
         setSelectedCustomer(customer.id);
-        setIsCustomerPopoverOpen(false)
+        setIsCustomerPopoverOpen(false);
 
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set("customer", customer.id);
@@ -62,10 +64,10 @@ export function OrderFilter(props) {
         const newUrl = route("adminpanel.orders", paramsObject);
 
         // Perform Inertia visit
-        Inertia.visit(newUrl);
-    }
+        router.get(newUrl);
+    };
 
-     // handle status filter
+    // handle status filter
     const handleStatusFilter = (status) => {
         setStatus(status);
 
@@ -79,8 +81,8 @@ export function OrderFilter(props) {
         const newUrl = route("adminpanel.orders", paramsObject);
 
         // Perform Inertia visit
-        Inertia.visit(newUrl);
-    }
+        router.get(newUrl);
+    };
 
     // clear all filter
     const clearFilter = () => {
@@ -88,7 +90,7 @@ export function OrderFilter(props) {
         searchParams.delete("status");
         searchParams.delete("customer");
         searchParams.delete("order_date");
-
+        searchParams.delete("search");
 
         const paramsObject = Object.fromEntries(searchParams.entries());
 
@@ -96,8 +98,8 @@ export function OrderFilter(props) {
         const newUrl = route("adminpanel.orders", paramsObject);
 
         // Perform Inertia visit
-        Inertia.visit(newUrl);
-    }
+        router.get(newUrl);
+    };
 
     // Handle search
     const handleSearch = (value) => {
@@ -111,8 +113,8 @@ export function OrderFilter(props) {
         const newUrl = route("adminpanel.orders", paramsObject);
 
         // Perform Inertia visit
-        Inertia.visit(newUrl);
-    }
+        router.get(newUrl);
+    };
 
     return (
         <div className="flex items-center flex-wrap gap-4 mb-3">
@@ -147,8 +149,13 @@ export function OrderFilter(props) {
                 onOpenChange={setIsCustomerPopoverOpen}
             >
                 <PopoverTrigger className="flex items-center justify-between text-sm w-44 h-9 border text-left px-3 border-dashed hover:border-primary/50 rounded-lg">
-                    {props?.customers?.find((c) => c.id === Number(selectedCustomer))
-                        ?.name ?? <span className="text-muted-foreground">Filter by customer</span>}
+                    {props?.customers?.find(
+                        (c) => c.id === Number(selectedCustomer)
+                    )?.name ?? (
+                        <span className="text-muted-foreground">
+                            Filter by customer
+                        </span>
+                    )}
                     <ChevronDown className="h-4 w-4 opacity-30" />
                 </PopoverTrigger>
                 <PopoverContent className="p-0">
@@ -161,7 +168,9 @@ export function OrderFilter(props) {
                                         key={customer.id}
                                         className="flex items-center justify-between"
                                         value={customer.name}
-                                        onSelect={() => handleCustomerFilter(customer)}
+                                        onSelect={() =>
+                                            handleCustomerFilter(customer)
+                                        }
                                     >
                                         <span className="text-sm line-clamp-1">
                                             {customer.name}
@@ -181,19 +190,20 @@ export function OrderFilter(props) {
                 </PopoverContent>
             </Popover>
 
-
-            { (props?.search || props?.order_date || props?.status || props?.customer)?
+            {props?.search ||
+            props?.order_date ||
+            props?.status ||
+            props?.customer ? (
                 <Button
-                    variant='secondary'
+                    variant="secondary"
                     size="sm"
                     className="text-sm"
                     onClick={clearFilter}
                 >
-                    <Cross1Icon className="w-3 h-3 mr-1"/>
+                    <Cross1Icon className="w-3 h-3 mr-1" />
                     <span>Clear</span>
                 </Button>
-                :null
-            }
+            ) : null}
         </div>
     );
 }

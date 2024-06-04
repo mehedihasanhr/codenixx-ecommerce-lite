@@ -41,6 +41,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../ui/select";
+import { router } from "@inertiajs/react";
 
 export function DataTable(props) {
     const isPageLoading = usePageLoading();
@@ -63,7 +64,7 @@ export function DataTable(props) {
     const handlePageClick = ({ selected }) => {
         const page = selected + 1;
 
-        if(selected !== props.pagination.pageIndex){
+        if (selected !== props.pagination.pageIndex) {
             const searchParams = new URLSearchParams(window.location.search);
             searchParams.set("page", page);
             const paramsObject = Object.fromEntries(searchParams.entries());
@@ -71,20 +72,16 @@ export function DataTable(props) {
             // Update the query string using Inertia
             const newUrl = route(props.route, paramsObject);
             props.setPagination((prev) => ({ ...prev, pageIndex: selected }));
-
             // Perform Inertia visit
-            Inertia.visit(newUrl);
+            router.get(newUrl);
         }
     };
-
-
 
     // handle page click
     const handlePerPageItem = (selected) => {
         const count = selected;
 
-
-        if(selected !== props?.pagination?.pageCount){
+        if (selected !== props?.pagination?.pageCount) {
             const searchParams = new URLSearchParams(window.location.search);
             searchParams.set("count", count);
             const paramsObject = Object.fromEntries(searchParams.entries());
@@ -93,7 +90,7 @@ export function DataTable(props) {
             const newUrl = route(props.route, paramsObject);
 
             // Perform Inertia visit
-            Inertia.visit(newUrl);
+            router.get(newUrl);
         }
     };
 
@@ -108,7 +105,7 @@ export function DataTable(props) {
         const paramsObject = Object.fromEntries(searchParams.entries());
 
         // Update the query string using Inertia
-       const newUrl = route(props.route, paramsObject);
+        const newUrl = route(props.route, paramsObject);
 
         // Perform Inertia visit
         Inertia.visit(newUrl);
@@ -188,31 +185,63 @@ export function DataTable(props) {
                                                     ] ?? null}
                                                 </div>
 
-                                                {header.column.getCanSort() ?
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger className="hover:bg-accent hover:text-accent-foreground h-8 w-8 focus-within:outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex items-center justify-center gap-2.5 rounded-md invisible group-hover:visible data-[state=open]:visible">
-                                                        <IconDotsVertical size={16} />
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            onClick={() => toggleSorting(header, false)}
-                                                        >
-                                                            <IconArrowNarrowUp size={16} className="mr-1.5 text-accent-foreground/50" />
-                                                            Asc
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onClick={() => toggleSorting(header, true)}>
-                                                            <IconArrowNarrowDown size={16} className="mr-1.5 text-accent-foreground/50"/>
-                                                            Desc
-                                                        </DropdownMenuItem>
-                                                        {header.column.getSortIndex() !== -1 ? (
-                                                            <DropdownMenuItem onClick={() => clearSorting(header)}>
-                                                                <IconArrowsUpDown size={14} className="mr-1.5 text-accent-foreground/50" />
-                                                                Clear Sort
+                                                {header.column.getCanSort() ? (
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger className="hover:bg-accent hover:text-accent-foreground h-8 w-8 focus-within:outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex items-center justify-center gap-2.5 rounded-md invisible group-hover:visible data-[state=open]:visible">
+                                                            <IconDotsVertical
+                                                                size={16}
+                                                            />
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuItem
+                                                                onClick={() =>
+                                                                    toggleSorting(
+                                                                        header,
+                                                                        false
+                                                                    )
+                                                                }
+                                                            >
+                                                                <IconArrowNarrowUp
+                                                                    size={16}
+                                                                    className="mr-1.5 text-accent-foreground/50"
+                                                                />
+                                                                Asc
                                                             </DropdownMenuItem>
-                                                        ) : null}
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                                : null}
+                                                            <DropdownMenuItem
+                                                                onClick={() =>
+                                                                    toggleSorting(
+                                                                        header,
+                                                                        true
+                                                                    )
+                                                                }
+                                                            >
+                                                                <IconArrowNarrowDown
+                                                                    size={16}
+                                                                    className="mr-1.5 text-accent-foreground/50"
+                                                                />
+                                                                Desc
+                                                            </DropdownMenuItem>
+                                                            {header.column.getSortIndex() !==
+                                                            -1 ? (
+                                                                <DropdownMenuItem
+                                                                    onClick={() =>
+                                                                        clearSorting(
+                                                                            header
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <IconArrowsUpDown
+                                                                        size={
+                                                                            14
+                                                                        }
+                                                                        className="mr-1.5 text-accent-foreground/50"
+                                                                    />
+                                                                    Clear Sort
+                                                                </DropdownMenuItem>
+                                                            ) : null}
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                ) : null}
                                             </div>
                                         </TableHead>
                                     );

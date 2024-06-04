@@ -16,14 +16,8 @@ export function OrdersTable(props) {
         pageSize: Number(props?.count),
     });
 
-
     return (
         <div className="bg-background p-8 rounded-lg mt-3">
-            <div className="flex items-center gap-2 5">
-                <Link> All </Link>
-                <Link> New </Link>
-                <Link> Completed </Link>
-            </div>
             <OrderFilter {...props} />
 
             <div className="relative">

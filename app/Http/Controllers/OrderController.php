@@ -22,7 +22,7 @@ class OrderController extends Controller
 
         $page = $request->query('page', 1);
         $count = $request->query('count', 10);
-        $status = $request->query('status', '');
+        $status = $request->query('status', 'pending');
         $createdAt = $request->query('order_date', '');
         $customer = $request->query('customer', '');
         $search = $request->query('search', '');
@@ -52,8 +52,8 @@ class OrderController extends Controller
                 }
 
                 // Search filter
-                if($search){
-                    $query->where('order_number', 'LIKE', '%'.$search.'%');
+                if ($search) {
+                    $query->where('invoice', 'LIKE', '%' . $search . '%');
                 }
             })
             ->orderBy($sort, $order)
@@ -77,5 +77,18 @@ class OrderController extends Controller
                 'search' => $search
             ]
         );
+    }
+
+
+    /**
+     * * Display a order details
+     * @param order_id order id 
+     */
+    public function orderView(Request $request, $invoice)
+    {
+        $order = Order::with(['items', 'user', 'status', 'paymentDetails'])->where('invoice', $invoice)->first();
+        return Inertia::render('SuperAdmin/Order', [
+            'order' => $order
+        ]);
     }
 }

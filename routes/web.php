@@ -17,13 +17,13 @@ Route::get('/', function () {
 })->name('welcome');
 
 // super admin
-Route::middleware(['auth', 'verified'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::prefix('adminpanel')->group(function(){
+    Route::prefix('adminpanel')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminpanel'])->name('adminpanel.dashboard');
 
         // products
-        Route::prefix('products')->group(function(){
+        Route::prefix('products')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('adminpanel.products');
             Route::get('/{product_id}/view', [ProductController::class, 'show'])->name('product.view');
             // create
@@ -38,7 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function(){
 
 
         // categories
-        Route::prefix('categories')->group(function(){
+        Route::prefix('categories')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('adminpanel.categories');
             Route::post('/', [CategoryController::class, 'create']);
             Route::patch('/{category_id}', [CategoryController::class, 'update'])->name('adminpanel.category.update');
@@ -46,8 +46,9 @@ Route::middleware(['auth', 'verified'])->group(function(){
         });
 
         // orders
-        Route::prefix('orders')->group(function(){
+        Route::prefix('orders')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('adminpanel.orders');
+            Route::get('/{invoice}/view', [OrderController::class, 'orderView'])->name('adminpanel.orderView');
         });
 
 
@@ -59,12 +60,6 @@ Route::middleware(['auth', 'verified'])->group(function(){
         Route::post('/gallery/upload', [GalleryController::class, 'store'])->name('upload.files');
         Route::delete('/gallery/{gallery_id}/remove', [GalleryController::class, 'destroy'])->name('gallery.remove');
     });
-
-
-
-
-
-
 });
 
 Route::middleware('auth')->group(function () {
@@ -73,4 +68,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
