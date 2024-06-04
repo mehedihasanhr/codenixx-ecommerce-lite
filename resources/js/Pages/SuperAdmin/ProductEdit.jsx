@@ -34,7 +34,7 @@ import { toast } from "sonner";
 
 export default function ProductEdit({ product, categories, brands }) {
 
-    const { data, setData, patch, errors, processing } = useForm({
+    const { data, setData, post, errors, processing } = useForm({
         name: product.name,
         description: product.description,
         price: product.price,
@@ -70,7 +70,9 @@ export default function ProductEdit({ product, categories, brands }) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        patch(route('product.update', {product_id: product.id}), {
+        console.log({data})
+        post(route('product.update', {product_id: product.id}), {
+            _method: 'patch',
             onSuccess: () => {
                 toast.success("Product Updated Successfully")
             }
@@ -88,14 +90,14 @@ export default function ProductEdit({ product, categories, brands }) {
             <div className="p-8 m-8 rounded-lg w-full max-w-5xl flex flex-col mx-auto gap-5">
                 <div className="flex items-center space-x-2.5">
                     <Button variant="ghost" size="icon" asChild>
-                        <Link href={route("dashboard.products")}>
+                        <Link href={route("adminpanel.products")}>
                             <IconArrowLeft size={15} />
                         </Link>
                     </Button>
                     <h2>Product</h2>
                 </div>
 
-                <form onSubmit={onSubmit} method="patch" encType="multipart/form-data">
+                <form onSubmit={onSubmit}>
                     <div className="grid grid-cols-12 gap-5">
                         {/* Left section */}
                         <div className="col-span-12 lg:col-span-8 flex flex-col gap-5">
@@ -166,7 +168,7 @@ export default function ProductEdit({ product, categories, brands }) {
                                             />
                                         </div>
                                     ))}
-                                    <ImageUpload
+                                     <ImageUpload
                                         files={data.files}
                                         setFiles={(files) => setData(prev => ({...prev, files}))}
                                     />

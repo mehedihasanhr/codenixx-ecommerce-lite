@@ -15,6 +15,9 @@ class VerifyEmailController extends Controller
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
+            if($request->user()->role === 'ADMIN'){
+                return redirect()->intended(route('adminpanel.dashboard', absolute: false).'?verified=1');
+            }
             return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
         }
 
@@ -22,6 +25,9 @@ class VerifyEmailController extends Controller
             event(new Verified($request->user()));
         }
 
+        if($request->user()->role === 'ADMIN'){
+            return redirect()->intended(route('adminpanel.dashboard', absolute: false).'?verified=1');
+        }
         return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
     }
 }

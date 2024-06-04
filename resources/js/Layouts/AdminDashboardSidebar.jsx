@@ -15,7 +15,7 @@ import {
 
 export default function AdminDashboardSidebar(props) {
     return (
-        <div className="hidden md:flex flex-col w-64 border-r h-screen">
+        <div className="hidden md:flex flex-col w-64 border-r h-screen bg-background">
             <div className="border-b border-border h-14 px-2.5 py-1">
                 <Logo />
             </div>
@@ -24,63 +24,63 @@ export default function AdminDashboardSidebar(props) {
                 <div className="flex flex-col gap-0.5 p-2.5">
                     {/* dashboard */}
                     <SidebarLink
-                        href={route("dashboard")}
+                        href={route("adminpanel.dashboard")}
                         title="Dashboard"
                         icon={<IconLayoutGrid />}
                     />
 
                     {/* Orders */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.orders")}
                         title="Orders"
                         icon={<IconShoppingCart />}
                     />
 
                     {/* Products */}
                     <SidebarLink
-                        href={route("dashboard.products")}
+                        href={route("adminpanel.products")}
                         title="Products"
                         icon={<IconShoppingBag />}
                     />
 
                     {/* Categories */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.categories")}
                         title="Categories"
                         icon={<IconSubtask />}
                     />
 
                     {/* Categories */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.settings")}
                         title="Brands"
                         icon={<IconBadge />}
                     />
 
                     {/* Collections */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.settings")}
                         title="Collections"
                         icon={<IconNewSection />}
                     />
 
                     {/* Customers */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.settings")}
                         title="Customers"
                         icon={<IconUsersGroup />}
                     />
 
                     {/* Gallery */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.settings")}
                         title="Gallery"
                         icon={<IconBrandGooglePhotos />}
                     />
 
                     {/* settings */}
                     <SidebarLink
-                        href={route("dashboard.settings")}
+                        href={route("adminpanel.settings")}
                         title="Settings"
                         icon={<IconSettings />}
                     />

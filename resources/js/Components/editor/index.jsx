@@ -1,9 +1,8 @@
 "use client";
 
 import { ScrollArea } from "@/Components/ui/scroll-area";
-import { ContentState, DefaultDraftBlockRenderMap, Editor, EditorState, convertFromHTML, convertToRaw } from "draft-js";
+import { CompositeDecorator, ContentState, convertFromHTML, convertToRaw, DefaultDraftBlockRenderMap, Editor, EditorState, Modifier, SelectionState } from "draft-js";
 import "draft-js/dist/Draft.css";
-
 import draftToHtml from "draftjs-to-html";
 import { useEffect, useState } from "react";
 import { EditorImageRenderComponent } from "./component/image-component";
@@ -11,26 +10,55 @@ import { blockRenderMap, styleMap } from "./config";
 import "./styles/editor.css";
 import { Toolbar } from "./toolbar";
 
+// Function to find link entities
+function findLinkEntities(contentBlock, callback, contentState) {
+    contentBlock.findEntityRanges(
+        (character) => {
+            const entityKey = character.getEntity();
+            return (
+                entityKey !== null &&
+                contentState.getEntity(entityKey).getType() === 'LINK'
+            );
+        },
+        callback
+    );
+}
+
+// Component to render links with custom styles
+const Link = (props) => {
+    const { url } = props.contentState.getEntity(props.entityKey).getData();
+    return (
+        <a href={url} style={{ color: 'hsl(var(--primary))', textDecoration: 'underline' }}>
+            {props.children}
+        </a>
+    );
+};
+
+// Create a composite decorator
+const decorator = new CompositeDecorator([{
+    strategy: findLinkEntities,
+    component: Link,
+}]);
+
 export default function TextEditor({ defaultValue, onChange, ...props }) {
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [editorState, setEditorState] = useState(EditorState.createEmpty(decorator));
 
     useEffect(() => {
-       if(defaultValue){
+        if (defaultValue) {
             const blocksFormHtml = convertFromHTML(defaultValue);
             const state = ContentState.createFromBlockArray(
                 blocksFormHtml.contentBlocks,
                 blocksFormHtml.entityMap
-            )
-            setEditorState(EditorState.createWithContent(state));
-       }
-    },[])
+            );
+            setEditorState(EditorState.createWithContent(state, decorator));
+        }
+    }, []);
 
     const handleEditorChange = (editorState) => {
         setEditorState(editorState);
         const raw = convertToRaw(editorState.getCurrentContent());
-        console.log({raw})
 
-        const hashtagConfig = {trigger: "#", separator: ' '}
+        const hashtagConfig = { trigger: "#", separator: ' ' };
 
         const markup = draftToHtml(
             raw,
@@ -38,12 +66,52 @@ export default function TextEditor({ defaultValue, onChange, ...props }) {
             false
         );
 
-        console.log({markup})
-
-        onChange(markup)
+        onChange(markup);
     };
 
-    // blockStyleFn
+    const handlePastedText = (text, html, editorState) => {
+        if (html) {
+            const blocksFromHTML = convertFromHTML(html);
+            let newContentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+
+            const blockMap = newContentState.getBlockMap();
+            blockMap.forEach((block) => {
+                block.findEntityRanges(
+                    (character) => {
+                        const entityKey = character.getEntity();
+                        return (
+                            entityKey !== null &&
+                            newContentState.getEntity(entityKey).getType() === 'LINK'
+                        );
+                    },
+                    (start, end) => {
+                        const entityKey = block.getEntityAt(start);
+                        if (entityKey) {
+                            const entity = newContentState.getEntity(entityKey);
+                            const data = entity.getData();
+                            const newEntityKey = editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', data).getLastCreatedEntityKey();
+                            newContentState = Modifier.applyEntity(
+                                newContentState,
+                                new SelectionState({
+                                    anchorKey: block.getKey(),
+                                    anchorOffset: start,
+                                    focusKey: block.getKey(),
+                                    focusOffset: end,
+                                }),
+                                newEntityKey
+                            );
+                        }
+                    }
+                );
+            });
+
+            const newState = EditorState.push(editorState, newContentState, 'insert-fragment');
+            setEditorState(newState);
+            return 'handled';
+        }
+        return 'not-handled';
+    };
+
     const blockStyleFn = (contentBlock) => {
         const type = contentBlock.getType();
         const blockStyle = contentBlock.getData().get("style");
@@ -89,7 +157,6 @@ export default function TextEditor({ defaultValue, onChange, ...props }) {
         return cls;
     };
 
-    // custom render component
     function customBlockRenderer(contentBlock) {
         const type = contentBlock.getType();
         if (type === "atomic") {
@@ -113,11 +180,10 @@ export default function TextEditor({ defaultValue, onChange, ...props }) {
                     editorState={editorState}
                     onChange={handleEditorChange}
                     customStyleMap={styleMap}
-                    blockRenderMap={DefaultDraftBlockRenderMap.merge(
-                        blockRenderMap
-                    )}
+                    blockRenderMap={DefaultDraftBlockRenderMap.merge(blockRenderMap)}
                     blockRendererFn={customBlockRenderer}
                     blockStyleFn={blockStyleFn}
+                    handlePastedText={handlePastedText}
                     {...props}
                 />
             </ScrollArea>

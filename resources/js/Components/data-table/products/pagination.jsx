@@ -9,14 +9,14 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "../ui/pagination";
+} from "../../ui/pagination";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 
 export default function TablePagination({
     totalDataLength,
@@ -78,7 +78,7 @@ export default function TablePagination({
         const paramsObject = Object.fromEntries(searchParams.entries());
 
         // Update the query string using Inertia
-        const newUrl = route('dashboard.products', paramsObject);
+        const newUrl = route('adminpanel.products', paramsObject);
 
         // Perform Inertia visit
         Inertia.visit(newUrl);
@@ -93,7 +93,7 @@ export default function TablePagination({
         const paramsObject = Object.fromEntries(searchParams.entries());
 
         // Update the query string using Inertia
-        const newUrl = route('dashboard.products', paramsObject);
+        const newUrl = route('adminpanel.products', paramsObject);
 
         // Perform Inertia visit
         Inertia.visit(newUrl);
@@ -129,7 +129,7 @@ export default function TablePagination({
                 <PaginationItem>
                     <PaginationPrevious
                         href="#"
-                         disabled={pageIndex === 0}
+                        disabled={pageIndex === 0}
                         className={clsx( "",
                             pageIndex === 0 && "hover:cursor-not-allowed opacity-50"
                         )}

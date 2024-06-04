@@ -12,7 +12,6 @@ export const usePageLoading = () => {
         });
 
         Inertia.on('finish', (event) => {
-            // Only set loading to false if it's a successful navigation
             if (!event.detail.visit.completed) {
                 setIsLoading(false);
             }

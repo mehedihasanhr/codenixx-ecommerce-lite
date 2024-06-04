@@ -1,4 +1,3 @@
-import TextEditor from "@/Components/editor";
 import { FormGroup } from "@/Components/FormGroup";
 
 import PriceInputField from "@/Components/PriceInput";
@@ -46,8 +45,11 @@ export default function ProductView({ product, categories, brands }) {
         status: product.status,
         colors: product.colors,
         sizes: product.sizes,
+        galleries: product?.galleries
     });
 
+
+    console.log({product})
     // calculate profit
     const profit = () => {
         const _profit = Number(data.price) - Number(data.cost_per_item);
@@ -59,14 +61,14 @@ export default function ProductView({ product, categories, brands }) {
             <div className="p-8 m-8 rounded-lg w-full max-w-5xl flex flex-col mx-auto gap-5">
                 <div className="w-full flex items-center gap-x-2.5">
                     <Button variant="ghost" size="icon" asChild>
-                        <Link href={route("dashboard.products")}>
+                        <Link href={route("adminpanel.products")}>
                             <IconArrowLeft size={15} />
                         </Link>
                     </Button>
                     <h2>Product</h2>
 
                     <Button size="sm" className="ml-auto" asChild>
-                        <Link href={route("product.edit", {product_id: product.id})} className="flex">
+                        <Link href={route("product.edit", {product_id: product.id})} className="flex hover:no-underline">
                             <IconPencil size={15} />
                             <span className="px-2">Edit</span>
                         </Link>
@@ -100,10 +102,9 @@ export default function ProductView({ product, categories, brands }) {
                                     {/* description */}
                                     <FormGroup>
                                         <Label>Description</Label>
-                                         <TextEditor
-                                            defaultValue={data.description}
-                                            onChange={(value) => setData((prev) => ({...prev, description: value}))}
-                                            readOnly
+                                        <div
+                                            className="editor_text border p-4 rounded-lg text-sm"
+                                            dangerouslySetInnerHTML={{__html: data.description}}
                                         />
                                     </FormGroup>
                                 </CardContent>
@@ -118,7 +119,9 @@ export default function ProductView({ product, categories, brands }) {
                                 </CardHeader>
 
                                 <CardContent className="grid grid-cols-12 gap-5">
-                                     {/* {data?.galleries?.map((file, index) => (
+                                    {data?.galleries?.length === 0 ? <div className="col-span-12 text-sm text-muted-foreground/80"> Empty media </div> : null}
+
+                                     {data?.galleries?.map((file, index) => (
                                         <div
                                             key={index}
                                             className="col-span-4 relative w-full rounded-lg group aspect-square border"
@@ -131,7 +134,7 @@ export default function ProductView({ product, categories, brands }) {
                                                 className="w-full h-full object-contain rounded-lg"
                                             />
                                         </div>
-                                    ))} */}
+                                    ))}
                                 </CardContent>
                             </Card>
 

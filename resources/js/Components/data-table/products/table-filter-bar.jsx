@@ -35,7 +35,7 @@ export default function TableFilterBar({
         const paramsObject = Object.fromEntries(searchParams.entries());
 
         // Update the query string using Inertia
-        const newUrl = route('dashboard.products', paramsObject);
+        const newUrl = route('adminpanel.products', paramsObject);
 
         // Perform Inertia visit
         Inertia.visit(newUrl);
@@ -112,7 +112,7 @@ export default function TableFilterBar({
                 className=" bg-transparent"
                 asChild
             >
-                <Link href={route('dashboard.products')}>
+                <Link href={route('adminpanel.products')}>
                     <IconX size={17} />
                     <span>Clear</span>
                 </Link>

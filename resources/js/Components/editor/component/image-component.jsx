@@ -107,9 +107,9 @@ export function EditorImageRenderComponent(props) {
                 onClick={handleImageClick}
                 aria-hidden
             >
-                {data.url !== undefined ? (
+                {data.src !== undefined ? (
                     <img
-                        src={data.url}
+                        src={data.src}
                         alt={data.alt}
                         className="rounded-sm w-full h-full object-fill"
                     />

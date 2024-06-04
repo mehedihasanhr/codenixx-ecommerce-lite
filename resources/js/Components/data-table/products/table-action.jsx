@@ -20,7 +20,7 @@ export default function TableActionDropdown({ product }) {
                 <DropdownMenuItem>
                     <Link
                         href={route("product.view", { product_id: product.id })}
-                        className="flex items-center w-full"
+                        className="flex text-muted-foreground hover:no-underline text-sm items-center w-full"
                     >
                         <IconEye size={16} />
                         <span className="px-1.5">Preview</span>
@@ -29,7 +29,7 @@ export default function TableActionDropdown({ product }) {
                 <DropdownMenuItem>
                     <Link
                         href={route("product.edit", { product_id: product.id })}
-                        className="flex items-center w-full"
+                        className="flex text-muted-foreground hover:no-underline text-sm items-center w-full"
                     >
                         <IconEdit size={16} />
                         <span className="px-1.5">Edit</span>
@@ -41,7 +41,7 @@ export default function TableActionDropdown({ product }) {
                             product_id: product.id,
                         })}
                         method="patch"
-                        className="flex items-center w-full"
+                        className="flex text-muted-foreground hover:no-underline text-sm items-center w-full"
                     >
                         <IconTrash size={16} />
                         <span className="px-1.5">Delate</span>

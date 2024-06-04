@@ -87,7 +87,7 @@ export default function ProductCreate({ categories, brands }) {
             <div className="p-8 m-8 rounded-lg w-full max-w-5xl flex flex-col mx-auto gap-5">
                 <div className="flex items-center space-x-2.5">
                     <Button variant="ghost" size="icon" asChild>
-                        <Link href={route("dashboard.products")}>
+                        <Link href={route("adminpanel.products")}>
                             <IconArrowLeft size={15} />
                         </Link>
                     </Button>

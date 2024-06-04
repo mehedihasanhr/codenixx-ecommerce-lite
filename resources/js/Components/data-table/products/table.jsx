@@ -34,8 +34,8 @@ import {
     IconDotsVertical,
 } from "@tabler/icons-react";
 import * as React from "react";
-import TablePagination from "../pagination";
 import { ProductTableColumns } from "./columns";
+import TablePagination from "./pagination";
 import TableFilterBar from "./table-filter-bar";
 
 export default function ProductsTable({

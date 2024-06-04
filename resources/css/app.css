@@ -82,4 +82,10 @@
     h6 {
         @apply text-sm;
     }
+
+    a { @apply text-primary hover:underline }
+    blockquote { @apply text-muted-foreground border-l-2 my-3 p-2 italic }
+    ol, ul{@apply ml-8 py-2}
+    ol > li { @apply list-decimal}
+    ul > li { @apply list-disc}
 }

@@ -40,7 +40,7 @@ export function AdminDashboardNavbar() {
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Link
-                                href={route("dashboard.settings")}
+                                href={route("adminpanel.settings")}
                                 className="flex items-center space-x-2"
                             >
                                 <IconSettings size={15} />

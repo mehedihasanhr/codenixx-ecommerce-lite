@@ -19,7 +19,6 @@ export default function Products({
      category
 }) {
 
-    console.log({products: products?.data})
 
     return (
         <>
@@ -34,7 +33,7 @@ export default function Products({
                         <Button size="sm" asChild>
                             <Link
                                 href={route("product.create")}
-                                className="flex items-center space-x-1"
+                                className="flex items-center space-x-1 hover:no-underline"
                             >
                                 <IconPlus size={15} />
                                 <span>Add Product</span>
@@ -45,32 +44,32 @@ export default function Products({
                     <div className="p-8 relative mt-8 max-w-full overflow-hidden rounded-lg border border-border/50 bg-background">
                         <div className="flex mb-5 text-sm">
                             <Link
-                                href={route('dashboard.products')}
+                                href={route('adminpanel.products')}
                                 data-active={filter === ''}
-                                className="pr-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                                className="pr-2.5 border-r text-muted-foreground data-[active=true]:text-primary font-medium hover:underline"
                             >
                                 Products ( <span className="text-foreground">{totalProducts}</span>)
                             </Link>
                             <Link
-                                href={route('dashboard.products', {filter: 'published'})}
+                                href={route('adminpanel.products', {filter: 'published'})}
                                 data-active={filter === 'published'}
-                                className="px-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                                className="px-2.5 border-r text-muted-foreground data-[active=true]:text-primary font-medium hover:underline"
                             >
                                 Published (
                                 <span className="text-foreground">{published}</span>)
                             </Link>
                             <Link
-                                href={route('dashboard.products', {filter: 'drafted'})}
+                                href={route('adminpanel.products', {filter: 'drafted'})}
                                 data-active={filter === 'drafted'}
-                                className="px-2.5 border-r data-[active=true]:text-primary font-medium hover:underline"
+                                className="px-2.5 border-r text-muted-foreground data-[active=true]:text-primary font-medium hover:underline"
                             >
                                 Drafts (
                                 <span className="text-foreground">{drafted}</span>)
                             </Link>
                             <Link
-                                href={route('dashboard.products', {filter: 'trashed'})}
+                                href={route('adminpanel.products', {filter: 'trashed'})}
                                 data-active={filter === 'trashed'}
-                                className="px-2.5 data-[active=true]:text-primary font-medium hover:underline"
+                                className="px-2.5 text-muted-foreground data-[active=true]:text-primary font-medium hover:underline"
                             >
                                 Trash (
                                 <span className="text-foreground">{trashed}</span>)

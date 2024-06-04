@@ -12,6 +12,7 @@
 .public-DraftEditor-content {
   min-height: 290px;
   padding: 1rem 0;
+  font-size: 14px;
 }
 
 .public-DraftEditorPlaceholder-root {
@@ -20,10 +21,6 @@
   pointer-events: none;
   color: hsl(var(--muted-foreground));
   font-size: 14px;
-}
-
-a {
-    color: hsl(var(--primary))
 }
 
 .public-DraftStyleDefault-ul {

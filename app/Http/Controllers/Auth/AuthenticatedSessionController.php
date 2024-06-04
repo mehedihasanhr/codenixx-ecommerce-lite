@@ -23,19 +23,32 @@ class AuthenticatedSessionController extends Controller
             'status' => session('status'),
         ]);
     }
- 
+
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function adminStore(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+
+        return redirect()->intended(route('adminpanel.dashboard', absolute: false));
+    }
+
     /**
      * Display the login view.
      */
     public function create(): Response
-    { 
+    {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'), 
+            'status' => session('status'),
         ]);
     }
 
-   
+
     /**
      * Handle an incoming authentication request.
      */
@@ -44,7 +57,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-  
+
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

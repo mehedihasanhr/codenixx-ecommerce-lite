@@ -13,7 +13,7 @@ export default function ImageTool(props) {
     const [, setFile] = React.useState();
 
     const [data, setData] = React.useState({
-        url: "",
+        src: "",
         alt: "",
         width: 200,
         height: 200,
@@ -30,7 +30,7 @@ export default function ImageTool(props) {
             reader.onload = (event) => {
                 const content = event.target?.result;
                 setFile(file); // Set file content
-                setData((s) => ({ ...s, url: content }));
+                setData((s) => ({ ...s, src: content }));
             };
 
             reader.readAsDataURL(file); // Read file as data URL
@@ -39,7 +39,7 @@ export default function ImageTool(props) {
     // set editor state
 
     const toggleImageBlock = () => {
-        if (data.url !== undefined) {
+        if (data.src !== undefined) {
             const contentState = editorState.getCurrentContent();
             const contentStateWithEntity = contentState.createEntity(
                 "IMAGE",
@@ -74,9 +74,9 @@ export default function ImageTool(props) {
             <PopoverContent className="w-96" align="center">
                 <div>
                     <div className="relative flex flex-col items-center justify-center p-4 w-full h-32 bg-muted rounded-lg text-center">
-                        {data.url !== "" ? (
+                        {data.src !== "" ? (
                             <img
-                                src={data.url}
+                                src={data.src}
                                 alt={data.alt}
                                 className="w-full h-full object-contain"
                             />
@@ -103,7 +103,7 @@ export default function ImageTool(props) {
                         <Input
                             type="text"
                             name="url"
-                            value={data.url}
+                            value={data.src}
                             onChange={handleChange}
                             placeholder="Image URL"
                         />

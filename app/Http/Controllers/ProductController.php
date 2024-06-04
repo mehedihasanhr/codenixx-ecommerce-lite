@@ -203,40 +203,41 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Product $product, $product_id)
-{
-    // Find the product data
-    $data = $product->findOrFail($product_id);
+    {
+        // Find the product data
+        $data = $product->findOrFail($product_id);
 
 
 
-    // Check if files are present in the request
-    if ($request->hasFile('files')) {
-        // Get the uploaded files
-        $uploadedFiles = $request->file('files');
+        // Check if files are present in the request
+        if ($request->hasFile('files')) {
+            // Get the uploaded files
+            $uploadedFiles = $request->file('files');
 
-        // Loop through each uploaded file
-        foreach ($uploadedFiles as $file) {
-            // Store the file in the storage
-            $path = $file->store('public/gallery');
+            // Loop through each uploaded file
+            foreach ($uploadedFiles as $file) {
+                // Store the file in the storage
+                $path = $file->store('public/gallery');
 
-            // Get the URL of the stored file
-            $url = Storage::url($path);
+                // Get the URL of the stored file
+                $url = Storage::url($path);
 
-            // Save each file URL in the database
-            $gallery = new Gallery();
-            $gallery->image_url = $url;
-            $gallery->imageable_id = $product_id;
-            $gallery->imageable_type = get_class($product);
-            $gallery->save();
+                // Save each file URL in the database
+                $gallery = new Gallery();
+                $gallery->image_url = $url;
+                $gallery->imageable_id = $product_id;
+                $gallery->imageable_type = get_class($product);
+                $gallery->save();
+            }
         }
+
+        // Update product data with request data
+        $data->update($request->except(['files', 'galleries']));
+
+
+        // Redirect to the product view page
+        return redirect()->intended(route('product.view', ["product_id" => $data->id], false));
     }
-
-    // Update product data with request data
-    $data->update($request->except('files'));
-
-    // Redirect to the product view page
-    return redirect()->intended(route('product.view', ["product_id" => $data->id], false));
-}
 
 
     /**
@@ -252,7 +253,7 @@ class ProductController extends Controller
         $product->save();
 
         // Redirect to the product listing page
-        return redirect()->route('dashboard.products')->with('success', 'Product trashed successfully.');
+        return redirect()->route('adminpanel.products')->with('success', 'Product trashed successfully.');
     }
 
     /**
@@ -267,6 +268,6 @@ class ProductController extends Controller
         $product->delete();
 
         // Redirect to the product listing page
-        return redirect()->route('dashboard.products')->with('success', 'Product deleted successfully.');
+        return redirect()->route('adminpanel.products')->with('success', 'Product deleted successfully.');
     }
 }

@@ -7,10 +7,18 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+
+   public function adminpanel(Request $request){
+        $user = $request->user();
+        if($user->role == "ADMIN"){
+            return Inertia::render('SuperAdmin/Dashboard');
+        }
+   }
+
    public function show(Request $request){
         $user = $request->user();
         if($user->role == "ADMIN"){
             return Inertia::render('SuperAdmin/Dashboard');
         }
-   } 
+   }
 }

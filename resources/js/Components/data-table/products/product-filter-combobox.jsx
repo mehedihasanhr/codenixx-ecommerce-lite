@@ -36,7 +36,7 @@ export function ProductFilterCombobox({ data, title, defaultCategory }) {
         const paramsObject = Object.fromEntries(searchParams.entries());
 
         // Update the query string using Inertia
-        const newUrl = route('dashboard.products', paramsObject);
+        const newUrl = route('adminpanel.products', paramsObject);
 
         // Perform Inertia visit
         Inertia.visit(newUrl);
