@@ -50,20 +50,6 @@ class Product extends Model
     }
 
 
-    // public function setDescriptionAttribute($value)
-    // {
-    //     // Decode the JSON string into an associative array
-    //     $requestData = json_decode($value, true);
-
-    //     // Extract 'blocks' and 'entityMap' from the request data
-    //     $blocks = $requestData['blocks'];
-    //     $entityMap = isset($requestData['entityMap']) ? $requestData['entityMap'] : [];
-
-    //     // Encode 'blocks' and 'entityMap' separately and store in database
-    //     $this->attributes['description'] = json_encode(['blocks' => $blocks]);
-    //     $this->attributes['entity_map'] = json_encode($entityMap);
-    // }
-
     /**
      * Get the attributes that should be cast.
      *

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
@@ -34,6 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{product_id}/edit', [ProductController::class, 'update'])->name('product.update');
             Route::patch('/{product_id}', [ProductController::class, 'trash'])->name('product.trash');
             Route::delete('/{product_id}', [ProductController::class, 'destroy'])->name('product.delete');
+
+            // json
+            Route::get('/product-list', [ProductController::class, 'productList'])->name('product.list');
         });
 
 
@@ -49,8 +54,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('orders')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('adminpanel.orders');
             Route::get('/{invoice}/view', [OrderController::class, 'orderView'])->name('adminpanel.orderView');
+            Route::put('/{invoice}/view', [OrderController::class, 'updateOrderStatus'])->name('adminpanelUpdateOrderStatus');
         });
 
+
+        // collections
+        Route::prefix('collections')->group(function () {
+            Route::get('/', [CollectionController::class, 'index'])->name('collections');
+            Route::get('/create', [CollectionController::class, 'create'])->name('collection.create');
+            Route::post('/create', [CollectionController::class, 'store']);
+            Route::get('/{collection_id}/{slug}', [CollectionController::class, 'show'])->name("collection.view");
+            Route::post("/{collection_id}/update", [CollectionController::class, 'update'])->name("collection.update");
+            Route::delete("/{collection_id}/destroy", [CollectionController::class, 'destroy'])->name("collection.destroy");
+            // Route::put('/{collection_id}', [CollectionController::class, 'store']);
+
+            // update collection items
+            Route::post("/{collection_id}/item/update", [CollectionController::class, 'updateItem'])->name("collection.item.update");
+        });
+
+        // orders
+        Route::prefix('customers')->group(function () {
+            Route::get('/', [CustomerController::class, 'index'])->name('customers');
+            Route::get('/{customer_id}', [CustomerController::class, 'show'])->name('customer.details');
+            // json response
+            Route::get('/{customer_id}/orders', [CustomerController::class, 'ordersJson'])->name('customer.orders.json');
+        });
 
         // settings
         Route::get('/settings', [SettingController::class, 'index'])->name('adminpanel.settings');

@@ -10,9 +10,14 @@ use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with(['parent'])->orderBy('id', 'desc')->get();
+        $search = $request->query("search", "");
+        $categories = Category::with(['parent'])->where(function ($q) use ($search) {
+            if ($search) {
+                $q->where("name", "LINK", "%" . $search . "%");
+            }
+        })->orderBy('id', 'desc')->get();
         return Inertia::render('SuperAdmin/Categories', [
             "categories" => $categories,
         ]);
@@ -66,7 +71,7 @@ class CategoryController extends Controller
 
 
 
-     public function update(Request $request, $category_id)
+    public function update(Request $request, $category_id)
     {
         // Validate the request data
         $validatedData = $request->validate([
@@ -106,7 +111,8 @@ class CategoryController extends Controller
     }
 
 
-    public function destroy($category_id){
+    public function destroy($category_id)
+    {
         $category = Category::findOrFail($category_id);
         $category->delete();
         return redirect()->intended(route('adminpanel.categories', absolute: false));

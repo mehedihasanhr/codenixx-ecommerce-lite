@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder {
+class DatabaseSeeder extends Seeder
+{
     /**
      * Seed the application's database.
      */
@@ -27,8 +29,11 @@ class DatabaseSeeder extends Seeder {
             ProductsTableSeeder::class
         ]);
 
-         // Create other users and their related data
+        // Create other users and their related data
         User::factory(10)->create()->each(function ($user) {
+            Address::factory()->create([
+                'user_id' => $user->id,
+            ]);
             \App\Models\Order::factory(3)->create(['user_id' => $user->id])->each(function ($order) {
                 \App\Models\OrderItem::factory(5)->create(['order_id' => $order->id]);
                 \App\Models\PaymentDetails::factory()->create(['order_id' => $order->id]);

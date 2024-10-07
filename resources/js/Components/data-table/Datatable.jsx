@@ -139,7 +139,7 @@ export function DataTable(props) {
             <ScrollArea
                 className={cn(
                     "border rounded-lg",
-                    isPageLoading && "opacity-70"
+                    isPageLoading && "opacity-70",
                 )}
             >
                 <Table>
@@ -153,6 +153,9 @@ export function DataTable(props) {
                                     return (
                                         <TableHead
                                             key={header.id}
+                                            style={{
+                                                maxWidth: header.getSize(),
+                                            }}
                                             className="text-sm h-10 text-muted-foreground/90 group select-none"
                                         >
                                             <div className="flex items-center justify-between">
@@ -164,7 +167,7 @@ export function DataTable(props) {
                                                                   header.column
                                                                       .columnDef
                                                                       .header,
-                                                                  header.getContext()
+                                                                  header.getContext(),
                                                               )}
                                                     </div>
                                                     {{
@@ -197,7 +200,7 @@ export function DataTable(props) {
                                                                 onClick={() =>
                                                                     toggleSorting(
                                                                         header,
-                                                                        false
+                                                                        false,
                                                                     )
                                                                 }
                                                             >
@@ -211,7 +214,7 @@ export function DataTable(props) {
                                                                 onClick={() =>
                                                                     toggleSorting(
                                                                         header,
-                                                                        true
+                                                                        true,
                                                                     )
                                                                 }
                                                             >
@@ -226,7 +229,7 @@ export function DataTable(props) {
                                                                 <DropdownMenuItem
                                                                     onClick={() =>
                                                                         clearSorting(
-                                                                            header
+                                                                            header,
                                                                         )
                                                                     }
                                                                 >
@@ -261,11 +264,11 @@ export function DataTable(props) {
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
-                                            className="py-1.5 px-4"
+                                            className="py-2 px-4"
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                cell.getContext(),
                                             )}
                                         </TableCell>
                                     ))}
@@ -307,7 +310,7 @@ export function DataTable(props) {
                 </div>
 
                 <Paginate
-                    pageCount={props?.data?.last_page}
+                    pageCount={props?.data?.last_page ?? 1}
                     currentPage={props?.pagination?.pageIndex}
                     handlePageClick={handlePageClick}
                 />

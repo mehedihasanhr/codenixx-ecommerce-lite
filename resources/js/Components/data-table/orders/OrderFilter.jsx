@@ -21,7 +21,6 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { cn } from "@/lib/utils";
-import { Inertia } from "@inertiajs/inertia";
 import { router } from "@inertiajs/react";
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
@@ -31,7 +30,7 @@ import { useState } from "react";
 
 export function OrderFilter(props) {
     const [date, setDate] = useState(() =>
-        props?.order_date ? new Date(props?.order_date) : null
+        props?.order_date ? new Date(props?.order_date) : null,
     );
     const [isCustomerPopoverOpen, setIsCustomerPopoverOpen] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(props?.customer);
@@ -150,7 +149,7 @@ export function OrderFilter(props) {
             >
                 <PopoverTrigger className="flex items-center justify-between text-sm w-44 h-9 border text-left px-3 border-dashed hover:border-primary/50 rounded-lg">
                     {props?.customers?.find(
-                        (c) => c.id === Number(selectedCustomer)
+                        (c) => c.id === Number(selectedCustomer),
                     )?.name ?? (
                         <span className="text-muted-foreground">
                             Filter by customer
@@ -179,7 +178,7 @@ export function OrderFilter(props) {
                                             className={cn(
                                                 "w-4 h-4 text-sm text-muted-foreground invisible",
                                                 Number(selectedCustomer) ===
-                                                    customer.id && "visible"
+                                                    customer.id && "visible",
                                             )}
                                         />
                                     </CommandItem>

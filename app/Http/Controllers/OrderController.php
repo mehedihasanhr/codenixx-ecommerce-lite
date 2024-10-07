@@ -14,8 +14,8 @@ class OrderController extends Controller
     private $timeZone = 'Asia/Dhaka';
 
     /**
-     * * Display a listing of the resource
-     * @param Illuminate\Http\Request $request
+     * @param Request $request
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
@@ -79,16 +79,32 @@ class OrderController extends Controller
         );
     }
 
-
     /**
-     * * Display a order details
-     * @param order_id order id 
+     * @param Request $request
+     * @param $invoice
+     * @return \Inertia\Response
      */
     public function orderView(Request $request, $invoice)
     {
-        $order = Order::with(['items', 'user', 'status', 'paymentDetails'])->where('invoice', $invoice)->first();
+        $order = Order::with(['items.product', 'user.address', 'status', 'paymentDetails'])->where('invoice', $invoice)->first();
         return Inertia::render('SuperAdmin/Order', [
             'order' => $order
         ]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $invoice
+     * @return \Inertia\Response
+     */
+
+    public function updateOrderStatus(Request $request, $invoice)
+    {
+        $order = Order::where('invoice', $invoice)->first();
+        $order->status_id = $request->input('status_id');
+        $order->save();
+
+        return redirect()->intended(route('adminpanel.orderView', ["invoice" => $order->invoice]));
     }
 }

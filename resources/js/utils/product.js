@@ -1,21 +1,21 @@
+import { Currency } from "./currency";
 
-
-export class Product{
-    constructor(product){
+export class Product {
+    constructor(product) {
         this.id = product?.id;
         this.uuid = product?.uuid;
         this.name = product?.name;
         this.slug = product?.slug;
         this.description = product?.description;
         this.currencyCode = "BDT";
-        this.price = {
-            amount: product?.price,
+        (this.price = {
+            amount: product?.price ?? 0,
             currencyCode: this.currencyCode,
-        },
-        this.compare_price = {
-            amount: product?.compare_price,
-            currencyCode: this.currencyCode,
-        };
+        }),
+            (this.compare_price = {
+                amount: product?.compare_price,
+                currencyCode: this.currencyCode,
+            });
 
         this.cost_per_item = {
             amount: product?.cost_per_item,
@@ -36,7 +36,7 @@ export class Product{
         this.shipping = {
             is_physical_product: product?.is_physical_product,
             weight: product?.weight,
-            length: product?.['length'],
+            length: product?.["length"],
             width: product?.weight,
             height: product?.height,
         };
@@ -49,25 +49,31 @@ export class Product{
         this.reviews = product?.reviews;
     }
 
+    getPrice() {
+        const currency = new Currency(this.price.currencyCode);
+        return {
+            amount: this.price.amount,
+            formatted: currency.format(this.price.amount),
+        };
+    }
 
-    getTotalReviews(){
+    getTotalReviews() {
         return this.reviews.length;
     }
 
+    getTotalRating() {
+        if (this.getTotalReviews() === 0) return 0;
 
-    getTotalRating(){
-        if(this.getTotalReviews() === 0 ) return 0;
-
-        return this.reviews.reduce((sum, review)=> {
-            sum + Number(review.rating)
+        return this.reviews.reduce((sum, review) => {
+            sum + Number(review.rating);
         }, 0);
     }
 
-
-    getAverageRating(){
-
-        if(this.getTotalReviews() > 0){
-            return Number(this.getTotalRating() / this.getTotalReviews()).toFixed(2);
+    getAverageRating() {
+        if (this.getTotalReviews() > 0) {
+            return Number(
+                this.getTotalRating() / this.getTotalReviews()
+            ).toFixed(2);
         }
 
         return 0;

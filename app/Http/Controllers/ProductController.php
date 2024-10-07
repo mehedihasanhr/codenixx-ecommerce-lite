@@ -270,4 +270,24 @@ class ProductController extends Controller
         // Redirect to the product listing page
         return redirect()->route('adminpanel.products')->with('success', 'Product deleted successfully.');
     }
+
+
+    // json
+    public function productList(Request $request)
+    {
+        $page = $request->query('page', 1);
+        $count = $request->query('count', 2);
+        $search = $request->query('search', '');
+
+        $products = Product::with(['galleries'])
+            ->where(function ($q) use ($search) {
+                if ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
+                }
+            })
+            ->select(['id', 'name', 'slug'])
+            ->paginate($count, ['*'], 'page', $page);
+
+        return response()->json($products, 200);
+    }
 }

@@ -17,7 +17,7 @@ import {
     TableRow,
 } from "@/Components/ui/table";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { Cross1Icon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { IconPlus } from "@tabler/icons-react";
 import _ from "lodash";
@@ -47,7 +47,7 @@ export default function Categories({ categories }) {
                     ?.includes(searchText.toLowerCase()) ||
                 category?.parent?.name
                     ?.toLowerCase()
-                    ?.includes(searchText.toLowerCase())
+                    ?.includes(searchText.toLowerCase()),
         );
 
         if (searchText) {
@@ -76,7 +76,7 @@ export default function Categories({ categories }) {
         const newUrl = route("adminpanel.categories", paramsObject);
 
         // Perform Inertia visit
-        Inertia.visit(newUrl);
+        router.get(newUrl);
     };
 
     return (
@@ -183,7 +183,7 @@ export default function Categories({ categories }) {
                                                                 {
                                                                     category_id:
                                                                         category.id,
-                                                                }
+                                                                },
                                                             )}
                                                             method="delete"
                                                             as="button"

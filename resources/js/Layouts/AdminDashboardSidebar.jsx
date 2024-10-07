@@ -59,14 +59,14 @@ export default function AdminDashboardSidebar(props) {
 
                     {/* Collections */}
                     <SidebarLink
-                        href={route("adminpanel.settings")}
+                        href={route("collections")}
                         title="Collections"
                         icon={<IconNewSection />}
                     />
 
                     {/* Customers */}
                     <SidebarLink
-                        href={route("adminpanel.settings")}
+                        href={route("customers")}
                         title="Customers"
                         icon={<IconUsersGroup />}
                     />

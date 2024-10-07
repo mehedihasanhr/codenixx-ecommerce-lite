@@ -42,9 +42,11 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role'=>'string',
+            'role' => 'string',
         ];
     }
+
+
 
     /**
      * Get the reviews for the user.
@@ -54,4 +56,29 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+
+    /**
+     * get the user address
+     */
+    public function address()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * get the user address
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+
+    /**
+     * get user order details
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

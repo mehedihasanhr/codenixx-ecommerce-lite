@@ -28,14 +28,14 @@ module.exports = {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
             },
             screens: {
-                    xs: "320px",
-                    sm: "576px",
-                    md: "768px",
-                    lg: "992px",
-                    xl: "1200px",
-                    "2xl": "1400px",
-                    "3xl": "1701px",
-                },
+                xs: "320px",
+                sm: "576px",
+                md: "768px",
+                lg: "992px",
+                xl: "1200px",
+                "2xl": "1400px",
+                "3xl": "1701px",
+            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
@@ -85,6 +85,10 @@ module.exports = {
                     from: { height: "var(--radix-accordion-content-height)" },
                     to: { height: "0" },
                 },
+            },
+            backgroundImage: {
+                profile_cover:
+                    "linear-gradient( 178.7deg,  rgba(126,184,253,1) 5.6%, rgba(2,71,157,1) 95.3% )",
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
